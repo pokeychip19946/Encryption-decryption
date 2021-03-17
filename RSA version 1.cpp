@@ -1,7 +1,7 @@
-#include <iostream>
-#include <cmath>
-#include <cstring>
-#include <cstdlib>
+#include<iostream>
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
 
 #ifndef ONLINE_JUDGE
 #define freopen freopen("input.txt","r",stdin);freopen("output.txt","w",stdout);
@@ -9,73 +9,81 @@
 #define freopen //comment
 #endif
 
+using namespace std;
 
 using l = long long int;
 #define S 100
 
-// Variables are passed globally.
-l p, q,      // primes
-  n,         // n = pq
-  t,         // toutient
-  flag,      // 1/0
-  e[S],    // public exponent e
-  d[S],    // private exponent d
+l p, q,      
+  n,         
+  t,         
+  flag,      
+  e[S],    
+  d[S],    
   temp[S], m[S], en[S];
 
-char msg[S];
+  char msg[S];
 
-// Functions:
-bool primecheck(l); // Check if(prime)
-void ce();         // Calculate exponent e
-l cd(l);          // Calculate exponent d (return value)
-void encrypt();  // Encrypt plaintext
-void decrypt(); // Decrypt ciphertext
 
-bool primecheck(l var) 
+bool primecheck(l var)
 {
   int i, j = sqrt(var);
   for (i = 2; i <= j; ++i)
-  if (var % i == 0)
+  {
+    if (var % i == 0)
+    {
       return false;
-  return true;
+    }
+
+    else
+    {
+      return true;
+    }
+  }
 }
 
 void ce()
 {
-     int k = 0;
-     for (int i = 2; i < t; i++)
-     {
-   if (t % i == 0) continue;
-   flag = primecheck(i);
-   if (flag == 1 && i != p && i != q)
-   {
-       e[k] = i;
-       flag = cd(e[k]);
-       if (flag > 0)
-       {
-    d[k] = flag;
-    k++;
-       }
-       if (k == 99) // (S-1)
-       break;
-   }
-     }
+  int k = 0;
+  for (int i = 2; i < t; i++)
+  {
+    if (t % i == 0) continue;
+    flag = primecheck(i);
+    if (flag == 1 && i != p && i != q)
+    {
+      e[k] = i;
+      flag = cd(e[k]);
+      if (flag > 0)
+      {
+        d[k] = flag;
+        k++;
+      }
+
+      if (k == 99)
+      {
+        break;
+      }
+    }
+  }
 }
+
 
 l cd(l x) 
 {
-     long int k = 1;
-     while (true)
-     {
-   k += t;
-   if (k % x == 0) return (k / x);
-     }
+  long int k = 1;
+  while (true)
+  {
+    k += t;
+    if (k % x == 0) return (k / x);
+  }
 }
+
 
 void encrypt()
 {
   l pt, ct, key = e[0], k, len;
   int i = 0;
+
   len = strlen(msg);
   while (i != len)
   {
@@ -87,16 +95,21 @@ void encrypt()
       k *= pt;
       k %= n;
     }
+
     temp[i] = k;
     ct = k + 96;
     en[i] = ct;
     i++;
   }
+
   en[i] = -1;
-  std::cout << "Encrypted message :\n";
+  cout << "Encrypted message :\n";
   for (i = 0; en[i] != -1; i++)
+  {
     printf("%c", en[i]);
+  }
 }
+
 
 void decrypt() 
 {
@@ -111,37 +124,54 @@ void decrypt()
       k *= ct;
       k %= n;
     }
+
     pt = k + 96;
     m[i] = pt;
     i++;
   }
+
   m[i] = -1;
-  std::cout << "Decrypted message :\n";
+  cout << "Decrypted message :\n";
   for (int i = 0; m[i] != -1; i++)
+  {
     printf("%c", m[i]);
+  }
 }
 
-int main()
-{   
-    freopen
-    do 
-    {
-     std::cout << "Enter two primes (p,q for Euler's totient to be taken as (p-1)(q-1)) :\n";
-     std::cin >> p >> q;
-     if(primecheck(p) && primecheck(q)) break;
-     else std::cout << "Wrong input; enter again (-_-)\n";
-    } while(1);    
 
-  std::cout << "Enter message for encryption :\n";
-  //fflush(stdin);
-  std::cin >> msg;
+
+
+
+
+
+
+
+
+int main()
+{
+  freopen
+  do
+  {
+    cout << "Enter two primes (p,q for Euler's totient to be taken as (p-1)(q-1)) :\n";
+    cin >> p >> q;
+    if(primecheck(p) && primecheck(q)) break;
+    else cout << "Wrong input; enter again (-_-)\n";
+  }while(1); 
+
+  cout << "Enter message for encryption :\n";
+  cin >> msg;
+
   for (int i = 0; msg[i] != '\0'; i++)
+  {
     m[i] = msg[i];
-    
+  }
+
   n = p * q;
-  t = (p - 1) * (q - 1); // Calcualting Euler's totient.
+  t = (p - 1) * (q - 1);
   ce();
   encrypt();
-  decrypt();
+  decrypt();  
+
   return 0;
+
 }
